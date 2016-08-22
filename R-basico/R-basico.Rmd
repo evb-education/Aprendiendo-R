@@ -1,0 +1,1004 @@
+---
+title: 'Primeros pasos con R: objetos y funciones básicas'
+author: "E. Vázquez - V. Chirivella - R. Alcover"
+date: "Junio 2016"
+output:
+  html_document:
+    fig_height: 1
+    fig_width: 2
+    highlight: pygments
+    keep_md: yes
+    number_sections: yes
+    toc: yes
+  word_document: default
+---
+
+
+
+# ¿Empezamos?
+Nada más comenzar la sesión de R en la **consola** nos está esperando el cursor.
+El cursor, que por defecto es el símbolo ‘>’, indica que R está listo para recibir un comando: 
+```{r, comment = ">", eval=FALSE}
+>
+```
+
+Por ejemplo, podemos usar R como una calculadora:
+
+```{r, comment = ">"}
+5+3
+5*0.7-1
+```
+
+Obervar que para la **notación decimal** se usa el punto **"."**
+
+En Windows, algunos comandos pueden ser ejecutados a través de los menus interactivos (por ej. buscar ayuda en línea, abrir archivos, . . . ) si usamos algún interzaz como *R Studio* o *R Comannder*.
+
+Si sólo pudiéramos usar R como una calculadora..., no valdría la pena tanto esfuerzo, por tanto, vamos a seguir...
+
+# ¿Qué es un objeto?
+R es un lenguaje Orientado a Objetos:
+
+>**casi TODO lo que se maneja, crea o destruye son objetos, cada uno con su nombre, su tipo y otras características.**
+
+Podemos modificar o manipular estos objetos con **operadores** (aritméticos, lógicos, y comparativos) y **funciones** (que a su vez son objetos).
+
+El uso y funcionamiento de los operadores es bastante intuitivo y se expondrá más adelante.
+
+Por otra parte, R es un lenguaje interpretado (como Java) y no compilado (como C, C++, Fortran, Pascal, . . . ), lo cual significa que los comandos escritos en el teclado son ejecutados directamente sin necesidad de construir ejecutables.
+Todo ello proporciona a R simplicidad y flexibilidad.
+
+# Generación y manipulación de objetos
+
+## Creación y asignación
+Un objeto se crea en el momento en el que se le asigna un contenido (valor, letra, etc...).
+Para **asignar** un valor a un objeto se utiliza el **operador** *asignar*: **<-**
+
+```{r, comment = ">"}
+x <- 3
+```
+En este momento acabas de crear tu primer objeto, objeto al que hemos llamado **x** y es numérico (luego hablaremos más sobre los tipos de objetos)
+
+A partir de ahora dicho objeto está en memoria y mientras no se cierre la sesión de R podremos hacer uso de él. Podemos darle otro valor, combinarlo con otros objetos para formar nuevos objetos o eliminarlo.
+
+Para ver el contenido de un objeto, no tenemos más que escribir su nombre en la consola y ejecutar.
+
+```{r, comment = ">"}
+x 
+```
+
+A ese mismo objeto podemos asignarle otro valor.
+
+```{r, comment = ">"}
+x <- 5
+x
+```
+Incluso podemos reasignarle su propio valor (recursividad)
+
+```{r, comment = ">"}
+x <- x*2
+```
+¿Adivinas el nuevo valor de x?
+
+
+```{r, comment = ">"}
+x
+```
+También podemos asignarle una expresión
+```{r, comment = ">"}
+y <- 0.5
+z <- x + y + 3
+```
+
+Múltiples asignaciones pueden escribirse en la misma línea separadas por comas
+```{r, comment = ">"}
+y <- 0.5; z <- x + y + 3; nombre <- "Juan"
+```
+
+## ¿Qué objetos se han creado?
+Para conocer qué objetos están activos en un momento dado de la sesión de R pueden usarse diversas instrucciones o comandos. Veamos algunos.
+
+La función *ls()* simplemente lista los objetos en memoria: sólo se muestran los nombres de los mismos.
+
+```{r, comment = ">"}
+ls()
+```
+
+o bien
+
+```{r, comment = ">"}
+objects()
+```
+
+## ¿Dónde están los objetos creados?
+Los objetos creados o cargados desde algún fichero u otra fuente se almacenan temporalmente en un espacio de memoria denominado **workspace** o área de trabajo mientras dure la sesión de R.
+
+Los objetos listados por las funciones anteriores son los que están en el *workspace*.
+
+Para conservar los objetos del área de trabajo una vez que la sesión finalice, hay que guardarlos en fichero de datos de R o exportarlos a otro formato.
+
+Si no hemos guardado los objetos en algún lugar especial (fichero, etc), R pregunta si queremos guardar el espacio de trabajo, si es así, guardará todo lo que tenemos en *workspace* en el aechivo llamado, por defecto, **.RData**
+
+## Eliminación
+Un objeto se elimina con la función *remove*.
+
+Por ejemplo:
+```{r, comment = ">"}
+rm(z)
+```
+
+Podemos comprobar que *z* ya no está en memoria:
+```{r, comment = ">"}
+objects()
+```
+# Nombres de objetos
+El nombre que le demos a los objetos debe cumplir ciertas reglas:
+
+* puede incluir letras (A-Z o a-z), dígitos (0-9), puntos (.) o subguión (_). 
+* debe comenzar con una letra (A-Z o a-z) o con un punto (.)
+* si empieza con punto (.), no puede continuar con un dígito, aunque el punto (.) puede ir seguido de dígito si no es el primer punto del nombre.
+
+
+R discrimina entre letras mayúsculas y minúsculas para el nombre de un objeto, de tal manera que x y X se refiere a objetos diferentes (inclusive bajo Windows).
+
+```{r, comment = ">"}
+X <- 200
+a3 <- 80
+A3 <- 0.01
+EstoEsUnaVariableNoNumerica <- "Hola"
+EstoEsUnaVariableNoNumerica2 <- "ABC"
+Esto.Es.Una.Variable.No.Numerica <- "letras"
+.variable <- "Esto también es un nombre válido"
+```
+El resultado sería:
+```{r, comment = ">"}
+X
+a3
+A3
+EstoEsUnaVariableNoNumerica
+EstoEsUnaVariableNoNumerica2
+Esto.Es.Una.Variable.No.Numerica
+.variable
+```
+Prueba a crear el siguiente objeto:
+```{r, comment = ">", error=TRUE}
+3A <- 5
+
+```
+# Operadores
+Los operadores se clasifican en tres grupos.
+La siguiente tabla muestra los operadosres básicos de R (y de cualquier lenguaje de programación)
+
+Aritméticos        | Comparativos          | Lógicos
+------------------ | --------------------- | ------------------
++   adición        | <  menor que          | !  NO lógico
+-   sustracción    | >  mayor que          | &  Y lógico
+*   multiplicación | <= menor o igual que  | \|  O lógico
+/   división       | >= mayor o igual que  | xor() O exclusivo
+^   potencia       | == igual              |                  
+%%  módulo         | != diferente de       |                   
+
+Los operadores aritméticos son conocidos por todos. Sin embargo, aunque los lógicos también los usamos frecuentemente, se hace de manera incosciente y merece la pena que les dediquemos unas líneas.
+
+Un objeto de tipo lógico tiene dos valores posibles **TRUE** (verdadero) o **FALSE** 
+(falso). Y el resultado de la aplicación de operadores lógicos sobre ellos producen como resultado uno de estos valores (**T** o **F**).
+
+Veamos algún ejemplo:
+```{r, comment = ">"}
+EsRojo <- FALSE
+EsBlanco <- TRUE
+EsAzul <- FALSE
+```
+Vamos modificar estos objetos mediante algunos operadores lógicos:
+```{r, comment = ">", eval = FALSE}
+EsBlanco | EsRojo
+EsBlanco | EsAzul
+EsBlanco & EsRojo
+EsBlanco & EsAzul
+```
+
+Ahora veamos los resultados que se producen tras la aplicación de operadores lógicos a los objetos creados.
+
+```{r, comment = ">"}
+EsBlanco | EsRojo
+EsBlanco | EsAzul
+EsBlanco & EsRojo
+EsBlanco & EsAzul
+```
+Como ya sabemos, el resultado puede almacenarse en un nuevo objeto:
+```{r, comment = ">"}
+NoEsRojo <- !EsRojo
+NoEsRojo
+```
+
+Los siguientes caracteres también son operadores en R: $, [, [[, :, ?, <-.
+
+# Funciones
+Una función es en realidad un tipo de objeto, denominado **function**, y está formada por una o varias expresiones o incluso otras funciones (recordar que tanto las expresiones como las funciones son objetos) a las que se les da un nombre y que pueden producir nuevos objetos.
+Un ejemplo de funciones son *ls()* o *rm()* utilizadas antes.
+
+Otros objetos se explicarán con más detalle más adelante, pero para poder seguir avanzando es necesario disponer de cierta información previa. 
+
+Cuando se hace referencia a una función para hacer uso de ella (en el argot de programación decimos que *"se llama"* a una función), debe hacerse mediante el nombre seguido de una serie de información o datos de entrada denominados **argumentos** entre paréntesis ().
+
+En ocasiones a las funciones no se les proporciona ningún argumento, aún así deben ir acompañadas de los paréntesis. 
+
+Cuando se lamma a una función se ejecutan o evalúan todas las expresiones que contiene sin necesidad de volverlas a escribir.
+
+Por ejemplo, para borrar el objeto z, llamamos a la función *rm* y le proporcionamos, entre paréntesis, los argumentos, en este caso el objeto a eleminar *(z)*:
+
+```{r, comment = ">", echo=FALSE}
+z <- 2
+
+```
+```{r, comment = ">"}
+rm(z)
+
+```
+Esta función no genera ningún nuevo objeto, pero sí un resultado.
+
+Si queremos listar los objetos que hay creados en un momento dado, llamamos a la función *ls* y le proporcionamos, entre paréntesis, los argumentos, en este caso ninguno *()*
+
+```{r, comment = ">"}
+ls()
+
+```
+Esta función produce un nuevo objeto que es la lista de objetos existentes en memoria.
+
+
+R dispone de un conjunto de funciones básicas que pueden usarse desde el momento que éste se instala. También dispone de cientos de funciones que no se cargan con la primera instalación del entorno R, pero que pueden instalarse y cargarse en cualquier momento, siempre que se tenga acceso a Internet. Estas funciones vienen agrupadas en los que se denominan **packages**  (paquetes) o **library** (librerías).
+Además, nosotros podemos construir también nuevas funciones.
+
+Las funciones pueden contener desde un conjunto pequeño de expresiones sencillas, como por ejemplo calcular la media) hasta complejas y largas secuencias de código que permiten llevar a cabo un análisis de regresión.
+
+![](funcion.jpg)
+
+# Contenido de los objetos
+Hemos visto que R trabaja con objetos los cuales tienen **nombre** y **contenido**, pero también tienen **atributos** que especifican el tipo de datos representados por el objeto. 
+
+Para entender la utilidad de estos atributos, consideremos un objeto que representa *el núumero de asignaturas suspendidas por un alumno*. Este objeto sería una variable que podría tomar los valores 1, 2, o 3, esto es, números enteros. Análogamente podríamos considerar otro objeto con los mismos valores que representaran el código o etiqueta que le asignamos a una característica categórica o cualitativa  (por ejemplo, el *sexo de los individuos en una poblacóon de crustáaceos: macho, hembra, o hermafrodita*).
+
+**¡Las herramientas estadísticas a utilizar, así como los resultados, no serán las mismas en ambos casos!**. En R, los atributos del objeto proporcionan la información necesaria para distinguir las dos situaciones. 
+
+En general, y hablando un poco más técnicamente, la acción de una función o de un operador sobre un objeto depende de los atributos de este último.
+
+Todo objeto tiene dos atributos intrínsecos: **clase** (o tipo) y **longitud**.
+
+## Clase de un objeto
+El tipo se refiere a la **clase** básica de los elementos en el objeto. Aunque muy habitualmente se usan los términos clase y tipo indistintamente no son los mismo.
+
+Existen cuatro clases principales:
+
+* numérico
+* caracter
+* complejo
+* lógico (FALSE o TRUE)
+
+Existen otros tipos, pero no representan datos como tal (por ejemplo funciones o expresiones).
+
+Para ver el tipo de un objeto se puede usa la función *class()* (o *mode()*).
+
+Veamos los siguientes objetos a los que les asignamos un contenido:
+```{r, comment = ">", eval = FALSE}
+x <- 2
+y <- 0.5
+z <- x + y + 3
+nombre <- "Juan"
+EsCierto <- TRUE
+w <- 3i
+```
+
+Si queremos conocer la clase de estos objetos:
+
+```{r, comment = ">", echo = FALSE}
+x <- 2
+y <- 0.5
+z <- x + y + 3
+nombre <- "Juan"
+EsCierto <- TRUE
+w <- 3i
+```
+```{r, comment = ">"}
+class(x)
+class(y)
+class(nombre)
+class(EsCierto)
+class(w)
+```
+
+Es importante recordar que, aunque *x* e *y* son objetos de clase numérica, cada uno pertenece a una subclase (ver *typeof()*), pues *x* contiene un valor Entero (Z^+^), mientras *y* contiene un número Real (R^+^) y R los almacena de manera diferente.
+
+Por ejemplo, el valor 4, 4.0 y 4i son valores numéricos todos ellos, pero uno es entero, el otro real y el otro complejo.
+```{r, comment = ">"}
+num.entero <- 4L
+num.real <- 4
+num.complejo <- 4i 
+
+```
+
+La clase de cada uno será:
+```{r, comment = ">"}
+class(num.entero)
+class(num.real)
+class(num.complejo)
+
+```
+
+Pero R internamente los distingue:
+```{r, comment = ">"}
+typeof(num.entero)
+typeof(num.real)
+typeof(num.complejo)
+
+```
+
+
+## Longitud de un objeto
+Por su parte, la longitud es simplemente el número de elementos en el objeto. 
+De momento sólo hemos visto objetos con un solo elemento, pero existen otros tipos de objetos que pueden contener más de un elemento.
+
+Para ver la longitud de un objeto se puede usa la función *length()*.
+Veamos, por ejemplo, la longitud de los objetos anteriores:
+```{r, comment = ">"}
+length(x)
+length(nombre)
+length(EsCierto)
+length(w)
+```
+Si tenemos un objeto de tipo vector (que veremos posteriormente) que contenga una serie de nombres al que denominamos *nombres*:
+
+```{r, comment = ">"}
+nombres <- c("Juan","Alex","Bernat","Carmen")
+length(nombres)
+
+```
+
+Por último, la función *ls.str* proporciona la clase de TODOS los objetos que hay en memoria durante una sesión de R, junto con su contenido.
+
+```{r, comment = ">"}
+ls.str()
+
+```
+
+## Clases especiales
+R tienen algunos valores con un significado especial. Seguidamente se exponen algunos:
+
+**- NA** (*Not Available*) indica que el dato es faltante. En el contexto estadístico representa un valor de alguna característica de un individuo que no se ha recogido.
+
+La operaciones básicas funcionan bien con éstos, y devuelven habitualmente otro *N*A cuando algún dato faltante interviene.
+
+No confundir NA con un valor que representa el “0” o “No aplica” y se ha dejado vacío.
+
+**- NULL** . Indica que no hay dato, no existe ni ocupa espacio. En realidad, aunque parezca extraño, no es de ninguna clase definida en R.
+
+**- Inf** (*Infinity*). Técnicamente es un número válido resultado de operaciones como la división por 0. Representa el número *infinito*. 
+
+**- NaN** (*Not A Number*) Dato que existe (no es NULL), pero su valor no se conoce, no por omisión, sino porque es el resultado de algunas operaciones como 0/ 0, Inf-Inf o Inf/Inf (indeterminaciones en matenáticas). Técnicamente también es de tipo numérico.
+
+Algunos ejemplos:
+```{r, comment = ">"}
+0/0
+6/0
+Inf-Inf
+```
+
+
+# Tipos de objetos
+En este apartado vamos a descibir y explicar únicamente los tipos de objetos fundamentales, aunque hay otros como las *formula* o modelos, el *arreglo*, *listas*, *factor* o las *funciones*, también importantes, pero cuyo uso queda fuera del alcance de estas notas.
+
+## Vector
+**Un vector es un objeto que contiene una colección de elementos de la misma clase (numéricos, caracteres o lógicos).**
+
+Un objeto que contenga una lista de números del 1 al 10 es un vector numérico de longitud 10.
+
+Para definir vectores, y otros objetos, como veremos luego, hay que asignarle valores. A veces es necesario proporcionar la longitud y clase de los elemntos que va a contener, aunque si no se hace, R los toma por defecto según los atributos de los elementos que se le asignan.
+
+La forma más sencilla de **asignar elementos a un objeto es mediante** la función de **concatención** **c()**. (También existe la función *vector()*, pero de momento no la vamos a utilizar)
+
+Si queremos defnir el vector numeros como x = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10), al que llamamos *numeros*, por ejemplo,  usaríamos la siguiente orden:
+```{r, comment = ">"}
+numeros <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+```
+
+*numeros* es un vector numérico.
+
+El vector *nombres*, creado antes, sería un vector de caracteres de longitud 4:
+```{r, comment = ">"}
+nombres <- c("Juan","Alex","Bernat","Carmen")
+
+```
+
+El objeto *x* creado en el segundo apartado puede verse como un vector numérico de longitud 1.
+
+Del mismo modo podemos crear vectores lógicos:
+```{r, comment = ">", eval=FALSE}
+colores <- c(EsRojo, EsBlanco, EsAzul)
+
+```
+
+*colores* será un vector de longitud 3 con el siguiente contenido:
+```{r, comment = ">", echo=FALSE}
+colores <- c(EsRojo, EsBlanco, EsAzul)
+
+```
+```{r, comment = ">"}
+colores
+
+```
+
+También podemos asignar una colección de objetos a otro objeto para crear un vector. En este caso todos los elementos (objetos) deben tener la misma clase.
+Por ejemplo, sean los vectores *x1* y *x2*:
+```{r, comment = ">"}
+x1 <- c(1, 2, 3, 4, 5)
+x2 <- c(6, 7, 8, 9, 10)
+```
+
+El vector x tendría el mismo contenido si lo creamos concatenando los vectores *x1* y *x2*:
+
+```{r, comment = ">"}
+x <- c(x1, x2)
+```
+```{r, comment = ">"}
+x
+
+```
+
+Otra forma de introducir elementos en un objeto, un poco más práctica que la función *c()* es mediante la función **scan()**
+
+
+Esta función permite introducir elementos al objeto interactivamente a través de la consola hata que introducimos *[enter]*.
+Con *scan()*, la asignación de valores al vector *x* quedaría:
+
+```{r, comment = ">", eval=F}
+> x <- scan()
+1: 1
+2: 2
+3: 3
+4: 4
+5: 5
+6: 6
+7: 7
+8: 8
+9: 9
+10: 10
+11: 
+Read 10 items
+
+```
+
+Existen otras funciones que facilitan la introducción de elementos numéricos a los objetos, estos son las funciones *seq()* y *rep()*.
+
+De forma más general, la función **seq(i:f, sep)** permite defnir secuencias proporcionando el valor inicial (i), el valor final (f) y la separación entre los elementos (sep).
+
+Por ejemplo, para crear un vector de 13 números reales que empiece en el -3, acabe en el 3, con una diferencia de 0,5 entre cada par de valores, usaríamos la siguiente instrucción:
+
+```{r, comment = ">"}
+y<-seq(-3,3,0.5)
+```
+
+que daría como resultado
+
+```{r, comment = ">"}
+y
+```
+
+Si no se indica la separación, se asume que es uno:
+```{r, comment = ">"}
+x <- seq(1:10)
+x
+```
+
+
+Por otra parte, la función de repetir elementos, **rep(elementos, repeticiones)**, permite defnir secuencias de valores repetidos proporcionando los elementos a repetir, y el número de veces que se repiten.
+
+Por ejemplo, para crear un vector que contenga 4 veces el número 3, usaríamos la siguiente instrucción:
+
+
+```{r, comment = ">"}
+z<-rep(3,4)
+```
+
+que daría como resultado
+
+```{r, comment = ">"}
+z
+```
+
+Otros ejemplos:
+```{r, comment = ">"}
+letras <- rep("A", 10)
+letras
+```
+
+```{r, comment = ">"}
+palabras.repetidas <- rep("Hola", 5)
+palabras.repetidas
+```
+
+
+```{r, comment = ">"}
+cierto <- rep(TRUE, 6)
+cierto
+```
+
+Por supuesto que también pueden repetirse secuencias, por ejemplo, para asignar a un vector la secuencia de números del 1 al 10 repetida 3 veces:
+
+```{r, comment = ">"}
+s <- seq(1:10)
+x <- rep(s,3)
+```
+
+Este código sería equivalente a esribir:
+```{r, comment = ">"}
+x <- rep(seq(1:10), 3)
+```
+
+Ambas piezas de código darían como resultado:
+```{r, comment = ">"}
+x
+```
+
+**NOTA: Las funciones c(), scan(), seq() y rep() se usan del mismo modo en la definición de otros objetos**, como veremos a continuación.
+
+## Matriz
+**Una matriz es un objeto que contiene una colección de elementos de la misma clase (numéricos, caracteres o lógicos), pero dispuestos en filas y columnas.**
+
+Para definir un objeto de tipo *matriz* se usa la función **matrix()**, a la que se le proporciona el conjunto de elementos que contendrá y su diposición (número de filas y de columnas)
+
+Por ejemplo, para definir la matriz *m = *
+![](Matriz1.gif)
+
+usaremos
+```{r, comment = ">"}
+elementos <- seq(1:9)
+filas <- 3
+columnas <- 3
+m <- matrix(elementos, filas, columnas)
+```
+
+Alternativamente, podíamos escribir, más abreviadamente:
+```{r, comment = ">"}
+m <- matrix(seq(1:9), 3, 3)
+```
+
+El resultado en ambos casos es el siguiente:
+```{r, comment = ">"}
+m
+```
+
+Observad que los elementos de la secuencia del 1 al 9 se han ido asignando por columnas.
+
+Mediante el argumento lógico *byrow*, que toma el valor FALSE por defecto, podemos indicar que asigne los valores por filas:
+
+```{r, comment = ">"}
+m <- matrix(seq(1:9), 3, 3, byrow = TRUE)
+```
+
+El resultado en ambos casos es el siguiente:
+```{r, comment = ">"}
+m
+```
+
+¿Qué longitud crees quetendrá la matriz *m*?
+
+```{r, comment = ">"}
+length(m)
+```
+
+En los objetos con más de una dimensión como las matrices, resulta útil la función **dim()**.
+
+Esta función proporciona el número de filas y de columnas (dimensiones) de un objeto:
+
+En este caso *dim(m)* dará como resultado:
+```{r, comment = ">"}
+dim(m)
+```
+
+Un objeto matriz también podría ser un elemento de otro objeto, una matriz de mayores dimensiones, o incluso una *lista* o un *data.frame*.
+
+Adicionalmente, como una matriz también tiene un significado matemático, existen numerosas funciones para operar con ellas, además de las que el propio usuario pueda crear. Algunas aparecen en la siguiente tabla:
+
+Función|Descripción
+----------|------------------------------------------------
+dim()|Devuelve la dimensión de la matriz
+----------|------------------------------------------------
+t()|Devuelve la transpuesta de la matriz
+----------|------------------------------------------------
+det()|Devuelve el determinante de la matriz
+----------|------------------------------------------------
+solve()|Devuelve la inversa de la matriz
+----------|------------------------------------------------
+diag()|Devuelve la diagonal de la  en forma de vector
+----------|------------------------------------------------
+colSums()|Devuelve la suma de las columnas de la matriz
+----------|------------------------------------------------
+rowSums()|Devuelve la suma de las filas de la matriz
+
+Veamos algún ejemplo.
+Para obtener el determinante de la matriz *m*:
+```{r, comment = ">"}
+det(m)
+```
+
+## data.frame
+El objeto denominado *data.frame* u hoja de datos constituye la manera más efciente en que R puede realizar un análisis estadístico de un conjunto de datos, de hecho, es el objeto que se utiliza fundamentalmente para manejar los conjuntos de datos en Estadística.
+
+Un *data.frame* es un objeto muy parecido a una *matriz*, pero con connotaciones adicionales. Por regla general, el *data.frame* se configura de tal manera que cada fila se refiere a un elemento del conjunto de indivíduos que se analizan , mientras que cada columna hace referencia a las distintas variables estudiadas.
+
+Con una nomenclatura estadística, diríamos que las filas son los casos (**indivíduos de la muestra**) y las columnas son las variables (**características aleatorias**).
+
+Esta configuración hace que visualmente una hoja de datos parezca una matriz. Sin embargo, como objetos de R, son cosas distintas.
+
+Vamos a ver cómo se construye una hoja de datos con los datos recogidos sobre 5 vídeos de cierta plataforma, que incluyen la temática, el número de descargas (en miles) y el tiempo de visualización (minutos) de cada uno.
+
+Estos datos se recogen en la siguiente tabla:
+
+Temática  | Nº de descargas | Tiempo
+--------- | ----------------|-------
+Gadgets   | 100             | 2.1
+Gadgets   | 50              | 1.3
+Cocina    | 200             | 5.0
+Cocina    | 150             | 3.4
+Gadgets   | 300             | 9.7
+
+
+Entonces, definiríamos la hoja de datos mediante:
+
+```{r, comment = ">"}
+videos<-data.frame(tema=c("Gadgets", "Gadgets", "Cocina", "Cocina", "Gadgets"), descargas=c(100, 50, 200, 150, 300), tiempo=c(2.1, 1.3, 5.0, 3.4, 9.7))
+```
+
+
+Así, tendremos tres variables, llamadas *tema*, *descargas* y *tiempo* con valores correspondientes a 5 indivíduos y contenidos en el objeto llamado *videos*.
+```{r, comment = ">"}
+videos
+```
+
+Otra forma de crear un *data.frame* consiste en forzar a que una matriz se convierta en una hoja de datos mediante la función **as.data.frame**.
+
+Por ejemplo, retomando la matriz *m* que hemos creado antes:
+```{r, comment = ">"}
+m
+```
+
+La matriz *m* se puede convertir en *data.frame* como:
+```{r, comment = ">"}
+videos2<-as.data.frame(m)
+videos2
+```
+
+El *data.frame* puede usarse como un todo, o sea, como un único objeto, o accediendo sólo parte de éste, bien sólo a algunos casos, bien sólo a algunas variables.
+
+De momento veremos cómo se puede hacer referencia a una variable en concreto con el operador **$**:
+
+**nombre-data.frame\$nombre-variable**
+
+Siguiendo el ejemplo, si queremos mostrar las temáticas de los vídeos:
+```{r, comment = ">"}
+temas <- videos$tema
+temas
+
+```
+
+o, por ejemplo:
+
+```{r, comment = ">"}
+length(videos$tema)
+```
+
+Si queremos pasar a segundos los tiempos de visualización:
+```{r, comment = ">"}
+tiempo.seg <-videos$tiempo * 60
+tiempo.seg
+```
+
+Ahora podríamos añadir el tiempo de visualización en segundos como una nueva variable al *data.frame* del siguiente modo:
+```{r, comment = ">"}
+videos$tiempo.seg <- tiempo.seg
+```
+
+Veamos como ha quedado el objeto *videos*
+```{r, comment = ">", comment = ">"}
+videos
+```
+
+No vamos a entrar en más detalles, pues estos objetos vamos a usarlos mediante menús.
+
+**....... Añadir la función is() .............................**
+
+
+# Guardar o recuperar objetos en una unidad de almacenamiento
+Para guardar los objetos creados o modificados en la sesión de R (y almacenados temporalmente en el *workspace*) en una unidad de almacenamiento, por ejemplo el disco duro, y que no se borren al salir de la sesión, utilizamos la función **save()**.
+
+Se usa como **save(** *objeto1*, *objeto2*, *...*,  **file =** *"archivo.RData"* **)**, escribiendo el nombre del fichero entre comillas y con extensión **RData**, que caracteriza un archivo de datos de R.
+
+Para guardar los objetos x e y en el fichero de R *datos.RData*:
+
+```{r, comment = ">", comment = ">"}
+x
+y
+```
+
+```{r, comment = ">"}
+save(x,y, file = "datos.RData")
+```
+Si exploramos el directorio o carpeta de trabajo, veremos que se se ha creado el fichero *datos.RData*.
+
+Si no se espicifica la ruta del fichero, se almacenará en el directorio de trabajo por defecto.
+
+Análogamente, si lo que queremos es cargar los objetos de un fichero ya existente, usaremos la función **load()**, del siguiente modo: 
+
+**load(** *objeto1*, *objeto2*, *...*,  **file =** *"archivo.RData"* **)**, escribiendo también el nombre del fichero entre comillas y con extensión correspondiente.
+
+```{r, comment = ">"}
+load("datos.RData")
+
+```
+
+
+Como cabría esperar, también se puede importar o exportar datos desde o hacia un fichero de texto (.txt o .csv), de Microsoft Excel, u asociado a otra aplicación, pero no lo vamos a explicar aquí.
+
+En las líneas siguientes, únicamente explicaremos brevemente cómo leer y/o escribir *data.frames* desde/en una unidad de almacenamiento en fomato texto.
+
+
+## Importar hojas de datos tipo texto
+Los archivos de tipo texto que contienen datos suelen tener una estructura en la que los individuos están en filas distintas y las variables están separadas por algún tipo de carácter, tales como comas, tabulaciones, espacios u otros.
+
+Además, es posible que la primera fila contenga los nombres de las variables. Y, por último, también es necesario fijarse en cómo están especificados los decimales, si los hay.
+
+Estas tres cuestiones, el hecho de que el archivo incluya los nombres de las variables, el carácter que separa las variables y el carácter que distingue los decimales son las necesarias para importar los datos.
+
+Vamos a ver cómo se hace mediante un ejemplo. En el archivo **Curs8990.txt** aparecen datos relativos a una muestra de alumnos de primero del Grado en Ingeniería Informática de la UPV. 
+
+Si abrimos este fichero con el *bloc de notas* de Windws, por ejemplo, el contenido tiene el siguiente aspecto:
+
+![](Curs8990.png)
+
+Se puede observar que, en efecto, se incluye el nombre de las variables y que éstas están separadas por tabulaciones. Además, los decimales están separados por comas, no por puntos.
+
+La función que R utiliza para importar archivos de tipo texto es **read.table()**. Esta función tiene multitud de opciones, pero nosotros vamos a destacar sólo las que creemos que son más importantes. 
+
+Concretamente, la sintaxis de dicha función, en general, sería la siguiente:
+
+**read.table(archivo, header=FALSE, sep="", dec=".", na.strings="NA")**
+
+En esta línea:
+
+**- archivo** sería el nombre del archivo que queremos importar.
+
+**- header** puede tomar el valor TRUE, si sabemos que la primera línea del archivo (cabecera) contiene los nombres de las variables, o el valor FALSE, si no lo hace.
+
+**- sep** se refiere al carácter que separa los datos. En nuestro ejemplo son tabulaciones, luego deberemos poner "\t". El valor por defecto es vacío, que corresponde a uno o más espacios en blanco o a tabulaciones.
+
+**- dec** representa al carácter que separa los números decimales. Hay que tener cuidado con él porque en español lo correcto es separar con comas, pero en el mundo anglosajón lo es hacerlo con puntos. De hecho, el punto es la opción por defecto.
+
+**- na.strings** se refiere al carácter que en el archivo original identifica a los datos faltantes. Por defecto, se supone que un dato faltante aparecerá como *NA*, pero podemos poner cualquier otro. Si el dato faltante simplemente no aparece en el archivo original, será entendido como tal dato faltante sin necesidad de especificar nada más.
+
+Por ejemplo, en el caso del archivo *Curs8990.txt*, tendríamos lo siguiente:
+
+
+```{r, comment = ">"}
+datos.curs8990 <- read.table("Curs8990.txt",header=TRUE,sep="\t",dec=",")
+```
+
+Ahora *datos.curs8990* ya es una hoja de datos manejable como hemos descrito en los apartados anteriores.
+
+```{r, comment = ">"}
+View(datos.curs8990)
+
+```
+![](Datos-Curs8990.png)
+
+
+## Exportar hojas de datos tipo texto
+La función **write.table** permite crear archivos de texto que contienen hojas de datos de R.
+
+La sintaxis de dicha función, con las opciones más habituales, es la siguiente:
+
+**write.table(hoja,file="fichero.txt", sep="\t", na="NA", dec=".", row.names=TRUE, col.names=TRUE)**
+
+Vamos a comentar sucintamente los detalles de cada argumento:
+
+**- hoja** se refiere al nombre de la hoja de datos (o *data.frame*) que queremos exportar.
+
+**- fichero.txt** será el nombre del fichero donde queremos exportar los datos.
+
+**- sep="\t"** quiere decir que los datos estarán separados por una tabulación. También podemos poner una coma, un espacio, ...
+
+**- na="NA"** se especifica la forma en que se guardarán los dato faltantes. Si queremos que los deje en blanco, pondremos na="".
+
+**- dec="."** indica el carácter con el que se separan los decimales.
+
+**- row.names** indicará si queremos que incluya en el fichero los nombres de las filas.
+
+**- col.names** indicará si queremos que se incluyan los nombres de las variables.
+
+Por ejemplo, teníamos un *data.frame* con las características de un grupo de alumnos al que hemos denominado *datos.curs8990*. Imaginemos que queremos exportarlos a un fichero llamado Pruebas.txt, con los datos separados por comas y con los nombres de las variables. 
+
+El código sería:
+```{r, comment = ">"}
+write.table(datos.curs8990,file="Pruebas.txt",sep=",",row.names=FALSE,col.names=TRUE)
+```
+Observa que este nuevo archivo aparecerá en la carpeta de trabajo por dejecto y puedes abrirlo con un editor de texto como el *Bloc de notas* de Windows.
+
+# Más funciones básicas
+En esta sección comentaremos algunas funciones de gran utilidad práctica.
+
+**sort()** proporciona la ordenación de un vector (por defecto, de menor a mayor).
+```{r, comment = ">"}
+sort(x)
+
+```
+
+**head()** permite visualizar las primeras filas de una hoja de datos. Muy útil cuando la hoja recoge información de un número elevado de indivíduos.
+
+```{r, comment = ">"}
+head(datos.curs8990)
+
+```
+
+**tail()** permite visualizar las últimas filas de un *data.frame*
+
+```{r, comment = ">"}
+tail(datos.curs8990)
+```
+
+**sum()** proporciona la suma de los elementos del argumento. Por ejemplo:
+```{r, comment = ">"}
+x
+sum(x)
+```
+
+**cumsum()** proporciona un vector con la suma acumulada del vector argumento. Por ejemplo,
+teniendo en cuenta que n = (1, 3, 5): 
+
+```{r, comment = ">"}
+n <- c(1,2,3)
+cumsum(n)
+```
+
+**rowSums()** y **colSums()** suman, por filas y por columnas, respectivamente, los datos de una hoja de datos.
+
+**prod()** y **cumprod()** son el equivalente a *sum()* y *cumsum()* para el producto.
+
+**sqrt()** es la función raíz cuadrada.
+
+```{r, comment = ">"}
+sqrt(9)
+
+sqrt(x)
+```
+
+**log()** es la función logaritmo natural o neperiano.
+
+**log10()** es el logaritmo en base 10.
+
+**exp()** es la función exponencial.
+
+
+Seguidamente se exponen algunas funciones fundamentales en el ámbito estadístico.
+
+**max()** y **min()** proporcionan el máximo y el mínimo del argumento (habitualmente, un vector o una columna de un *data.frame*).
+
+Si queremos saber cuál es el máximo y mínimo peso de los alumnos de la muestra del fichero *Curs8990*:
+
+```{r, comment = ">"}
+min(datos.curs8990$PESO)
+max(datos.curs8990$PESO)
+
+```
+
+**mean()** permite obtener la media aritmética o promedio de una muestra de valores
+Podemos proporcionarle los valores como argumento. Por ejemplo,
+```{r, comment = ">"}
+mean(c(1,2,3,4,5))
+
+```
+O bien hacer referencia a los valores de un objeto, como una columna de un *data.frame*
+```{r, comment = ">"}
+mean(datos.curs8990$EDAD)
+mean(datos.curs8990$EDAD, na.rm = T)
+```
+
+**sd()** calcula la desviación típica de una muestra de datos.
+
+```{r, comment = ">"}
+sd(c(1,2,3,4,5))
+ 
+sd(datos.curs8990$EDAD)
+```
+
+**quantile()** Calcula los cuantiles.
+
+Por ejemplo, para obtener el percentil 5 y el percentil 95 del peso de los alumnos:
+
+```{r, comment = ">"}
+quantile(datos.curs8990$PESO,probs=c(0.05,0.95),na.rm=TRUE)
+```
+
+Para calcular el 1er y 3er cuartil (Q1 y Q3) del peso de los alumnos:
+
+```{r, comment = ">"}
+quantile(datos.curs8990$PESO,probs=c(0.25,0.75),na.rm=TRUE)
+
+```
+**median()** calcula la mediana de una muestra de valores.
+
+La mediana del peso de los alumnos la obtendríamos como:
+```{r, comment = ">"}
+median(datos.curs8990$PESO, na.rm=T)
+```
+
+**table()** Obtiene las frecuencias absolutas de una variable.
+Para obtener estas frecuencias para el *dígito elegido al azar* por un alumno:
+
+```{r, comment = ">"}
+frec.digito<-table(datos.curs8990$DIGITO)
+frec.digito
+```
+
+**prop.table()** Obtiene las frecuencias relativas de una variable.
+Para obtener estas frecuencias para el *dígito elegido al azar* por un alumno:
+
+```{r, comment = ">"}
+prop.table(frec.digito)
+
+```
+# Cerrar la sesión de R
+Para cerrar la sesión, basta con teclear **q()** en la consola.
+
+# Información y ayuda
+Muchas de las funciones que se han mostrado y utilizado en este documento poseen opciones y argumentos adicionales que no hemos mencionado.
+Si deseamos obtener ayuda sobre el uso de alguna función cuyo nombre conocemos, podemos utilizar
+la ayuda de R simplemente antecediendo el nombre de esa función con un signo de interrogación.
+
+Por ejemplo:
+
+```{r, comment = ">"}
+?sort
+```
+?sort abrirá una ventana de nuestro explorador con todos los detalles sobre el uso de esa función, incluyendo interesantes ejemplos:
+
+![](Ayuda1.png)
+
+Las ayudas de R suelen ser bastante eficaces, aunque el usuario principiante puede desanimarse un poco cuando comprueban que están en inglés.
+
+Además de esta ayuda propia del entorno R, hay mucha documentación disponible en castellano completamente libre, eso es lo bueno de R. Alfinal del documento os muestro alguna.
+
+Si queremos ayuda sobre un aspecto del que desconocemos la función que nos lo facilita, por ejemplo, si deseamos saber cómo se realiza un histograma, pero no sabemos la función correpondiente, escribimos ??histogram, por ejemplo.
+
+```{r, comment = ">"}
+??histo
+```
+
+Esto abrirá una ventana de R con todas las funciones que incluyen la palabra histogram en su ayuda. El resultado concreto podemos verlo a continuación:
+
+![](Ayuda2.png)
+
+En esa ventana aparecen los nombres de las funciones precedidos del paquete de R en el que se encuentra esa función.
+
+Un último paso en la búsqueda de ayuda. ¿Qué ocurre si necesitamos ayuda sobre algo que está en una función de un paquete que nosotros no tenemos instalado? Tengamos en cuenta que, al instalar R tan sólo incorporamos una mínima parte de los paquetes o librerías que el proyecto CRAN tiene, gracias a la colaboración de los miles de desarrolladores de R, así que, si no encontramos ayuda en los paquetes instalados por defecto, puede que aún así, exista un paquete en CRAN donde haya algo al respecto. 
+
+Dada la amplísima difusión de R, si en algún momento buscamos algo sobre un tema concreto, podemos tener fundadas esperanzas de que alguien antes que nosotros se habrá hecho la misma pregunta y probablemente ha encontrado la respuesta por sí mismo o con la ayuda de otros usuarios de R. La cuestión es, ¿cómo acceder a esa información? En este punto, la ayuda de R nos permite acceder, por un lado, a la ayuda de todos los paquetes alojados en CRAN y, por otro, a todos los mensajes con preguntas y respuestas que diariamente fluyen a través de las listas de correo de los usuarios y desarrolladores de R. Y es bien sencillo.
+
+Tan sólo tenemos que teclear **RSiteSearch("web")** para, por ejemplo, buscar información sobre funciones que, en algún lugar de la ayuda, incluyan la palabra *web*. 
+
+```{r, comment = ">"}
+RSiteSearch("web")
+```
+
+Eso abrirá una ventana de nuestro navegador donde podemos elegir el ámbito de nuestra consulta:
+
+![](Ayuda3.png)
+
+
+## Bibliografía
+[Sáez Castillo, A.J., 2010. Métodos Estadísticos con R y R Commander, Jaén: Universidad de Jaén.](https://cran.r-project.org/doc/contrib/Saez-Castillo-RRCmdrv21.pdf)
+
+[Paradis, Emmanuel, 2003. R para Principiantes. Institut des Sciences de l'Evolution Universit Montpellier II ](https://cran.r-project.org/doc/contrib/rdebuts_es.pdf)
+
+## Webs
+[R Studio](https://www.rstudio.com/online-learning/)
+
+[CRAN Help](https://cran.r-project.org/doc/manuals/r-release/R-intro.html)
+
+[Quick R](http://www.statmethods.net/)
